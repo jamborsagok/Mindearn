@@ -134,7 +134,7 @@ CREATE TABLE public.subscribers (
   name          text,
   interest      text,
   source        text
-                  CHECK (source IN ('inline-form', 'popup', 'profile', 'crm')),
+                  CHECK (source IN ('inline-form', 'popup', 'profile')),
   status        text        NOT NULL DEFAULT 'active'
                   CHECK (status IN ('active', 'unsubscribed', 'bounced', 'pending')),
   tags          text[]      NOT NULL DEFAULT '{}',
