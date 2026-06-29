@@ -141,3 +141,9 @@ wireSubscriptionForms();
 wireLeadPopup();
 applyAccessState();
 track("page_view");
+
+if (import.meta.env.DEV) {
+  import('./src/utils/healthCheck.js').then(({ checkSupabaseConnection }) => {
+    checkSupabaseConnection();
+  });
+}
