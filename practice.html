@@ -50,7 +50,7 @@
         </div>
       </div>
       <aside class="callout">
-        <span class="pill">Aktuális fókusz</span>
+        <span class="pill">Aktuális fókusz · Minta nézet</span>
         <h2>3. hét - alapritmus</h2>
         <p>Nyugodt következetesség, napi tiszta lépés, esti felismerés és továbbadott érték.</p>
         <div class="bar"><span style="width:33%"></span></div>
@@ -140,8 +140,8 @@
         </article>
       </div>
       <div class="actions" style="margin-top:14px">
-        <button class="btn" type="button" id="practiceDone">Mai gyakorlás rögzítése</button>
-        <span id="practiceStatus" class="tag" aria-live="polite">Mai lap készen áll.</span>
+        <button class="btn" type="button" id="practiceDone">Minta rögzítés</button>
+        <span id="practiceStatus" class="tag" aria-live="polite">Mentés hamarosan elérhető</span>
       </div>
     </section>
 
@@ -181,7 +181,7 @@
       document.querySelector(".header").classList.toggle("menu-open");
     });
     document.getElementById("practiceDone").addEventListener("click", () => {
-      document.getElementById("practiceStatus").textContent = "Mai gyakorlás rögzítve.";
+      document.getElementById("practiceStatus").textContent = "Minta rögzítve — mentés hamarosan.";
     });
   </script>
   <script type="module" src="mindearn-app.js"></script>
