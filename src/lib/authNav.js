@@ -106,15 +106,27 @@ export function initAuthNav() {
     });
   });
 
-  // Apply initial state from cached session (reads localStorage, near-instant)
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    setAuthState(!!session);
-  });
+  // Apply initial state from cached session (reads localStorage, near-instant).
+  // If the session can't be resolved for any reason, fall back to logged-out
+  // nav so Bejelentkezés/Regisztráció are never left hidden indefinitely.
+  supabase.auth.getSession()
+    .then(({ data: { session } }) => {
+      setAuthState(!!session);
+    })
+    .catch(err => {
+      console.warn('Auth navigation fallback: session could not be resolved, showing logged-out navigation.', err);
+      setAuthState(false);
+    });
 
   // Keep nav in sync on sign-in, sign-out, token expiry, or other-tab changes
-  supabase.auth.onAuthStateChange((_event, session) => {
-    setAuthState(!!session);
-  });
+  try {
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthState(!!session);
+    });
+  } catch (err) {
+    console.warn('Auth navigation fallback: session could not be resolved, showing logged-out navigation.', err);
+    setAuthState(false);
+  }
 }
 
 function setAuthState(loggedIn) {

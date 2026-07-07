@@ -886,7 +886,10 @@ textarea:focus, input:focus, select:focus {
   .brand { min-width: 0; }
   .brand img { width: 40px; }
   .brand span span { display: none; }
-  .nav-actions .ghost-btn { display: none; }
+  /* Auth-controlled buttons (Bejelentkezés/Regisztráció/Dashboard/Kijelentkezés)
+     must stay reachable on mobile — their visibility is driven by JS auth state,
+     not by this breakpoint. Only non-auth ghost buttons collapse here. */
+  .nav-actions .ghost-btn:not([data-auth-visible]) { display: none; }
   h1 { font-size: clamp(2rem, 12vw, 3.15rem); letter-spacing: -0.035em; }
   h2 { letter-spacing: -0.025em; }
   .lead { font-size: 1rem; }
