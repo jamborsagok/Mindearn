@@ -92,7 +92,8 @@
       gap: 7px;
     }
 
-    .nav button {
+    .nav button,
+    .nav a {
       width: 100%;
       display: flex;
       align-items: center;
@@ -108,7 +109,8 @@
     }
 
     .nav button:hover,
-    .nav button.active {
+    .nav button.active,
+    .nav a:hover {
       background: linear-gradient(90deg, var(--jade-soft), rgba(255, 255, 255, 0.72));
       border-color: rgba(22, 143, 120, 0.18);
       color: var(--jade);
@@ -485,15 +487,16 @@
       <div class="nav-label">Saját tér</div>
       <nav class="nav">
         <button class="active" type="button" data-view="overview"><span class="nav-icon">⌂</span>Áttekintés</button>
-        <button type="button" data-view="courses"><span class="nav-icon">▦</span>Kurzusaim</button>
-        <button type="button" data-view="library"><span class="nav-icon">♪</span>Hanganyagok</button>
-        <button type="button" data-view="practice"><span class="nav-icon">3</span>3-6-9 hetes út</button>
+        <a href="courses.html"><span class="nav-icon">▦</span>Kurzusaim</a>
+        <a href="audio.html"><span class="nav-icon">♪</span>Hanganyagok</a>
+        <a href="practice.html"><span class="nav-icon">3</span>3-6-9 gyakorlás</a>
+        <a href="workbook.html"><span class="nav-icon">✎</span>Munkafüzet</a>
         <button type="button" data-view="live"><span class="nav-icon">◉</span>Élő alkalmak</button>
       </nav>
 
       <div class="nav-label">Fiók</div>
       <nav class="nav">
-        <button type="button" data-view="profile"><span class="nav-icon" id="profileInitials">…</span>Profil és hozzáférések</button>
+        <a href="profile.html"><span class="nav-icon" id="profileInitials">…</span>Profil és hozzáférések</a>
         <button type="button" data-auth-signout><span class="nav-icon">↩</span>Kijelentkezés</button>
       </nav>
 
@@ -514,9 +517,9 @@
         <div class="top-actions">
           <a class="ghost-btn" href="index.html">← Vissza a főoldalra</a>
           <a class="ghost-btn" href="index.html#olvassbele">Olvass bele</a>
-          <a class="ghost-btn" href="profile.html">Hozzáférések</a>
-          <a class="ghost-btn" href="workbook.html">Munkafüzet</a>
-          <a class="btn" href="courses.html">Folytatom a képzést</a>
+          <a class="ghost-btn" href="profile.html">Profilom szerkesztése</a>
+          <a class="ghost-btn" href="workbook.html">Megnyitom a munkafüzetet</a>
+          <a class="btn" href="courses.html">Megnyitom a képzést</a>
         </div>
       </section>
 
@@ -527,10 +530,10 @@
             <h2>A következő lépés mindig látható.</h2>
             <p>A MindEarn központ célja, hogy az olvasásból és inspirációból rendszeres gyakorlás legyen. A könyv, a leckék, a hanganyagok és az élő alkalmak egy úton belül kapcsolódnak össze.</p>
             <div class="top-actions" style="justify-content:flex-start">
-              <a class="btn" href="practice.html">Mai gyakorlás</a>
+              <a class="btn" href="practice.html">Elindítom a 3-6-9 gyakorlást</a>
               <a class="ghost-btn" href="profile.html#letoltesek">Könyvrészlet</a>
-              <a class="ghost-btn" href="workbook.html">Munkafüzet</a>
-              <a class="ghost-btn" href="audio.html">Hanganyagok</a>
+              <a class="ghost-btn" href="workbook.html">Megnyitom a munkafüzetet</a>
+              <a class="ghost-btn" href="audio.html">Hanganyagok megnyitása</a>
             </div>
           </div>
           <img src="assets/books-transparent.png" alt="MindEarn könyvek">
@@ -548,6 +551,7 @@
             <h2>Kiemelt útvonal</h2>
             <p>A könyv 12 fejezete három nagy tanulási egységbe rendezve.</p>
           </div>
+          <a class="ghost-btn" href="courses.html">Megnyitom a képzést</a>
         </div>
         <div class="grid-3">
           <article class="card"><h3>Alapozó modul</h3><p>Teremteni, Alkotni, Adni alapkód.</p><div class="bar"><span style="width:25%"></span></div></article>

@@ -216,8 +216,11 @@
     });
   </script>
   <script type="module">
+    import { requireAuth } from './src/lib/dashboardGuard.js';
     import { supabase } from './src/lib/supabase.js';
     import { getProfile, getDisplayFirstName } from './src/services/profile.js';
+
+    requireAuth();
 
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) return;

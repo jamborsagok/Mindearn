@@ -184,6 +184,10 @@
       document.getElementById("practiceStatus").textContent = "Minta rögzítve — mentés hamarosan.";
     });
   </script>
+  <script type="module">
+    import { requireAuth } from './src/lib/dashboardGuard.js';
+    requireAuth();
+  </script>
   <script type="module" src="mindearn-app.js"></script>
 </body>
 </html>
