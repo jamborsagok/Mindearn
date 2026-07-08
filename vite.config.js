@@ -18,6 +18,7 @@ export default defineConfig({
         practice:  'practice.html',
         workbook:  'workbook.html',
         profile:   'profile.html',
+        review:    'review.html',
         '404':     '404.html',
       }
     }

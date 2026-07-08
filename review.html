@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindEarn fejlesztői áttekintő</title>
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root {
+      --ink: #191611;
+      --text: #332b20;
+      --muted: #746b5e;
+      --line: #e8ddc8;
+      --line-strong: #d6c19b;
+      --paper: #fbf7ef;
+      --paper-2: #f3ecde;
+      --panel: #ffffff;
+      --gold: #6f8f83;
+      --jade: #168f78;
+      --jade-soft: #e5f5ef;
+      --amber: #745017;
+      --amber-soft: #fff7e6;
+      --shadow: 0 18px 46px rgba(65, 48, 25, 0.11);
+      --shadow-soft: 0 8px 22px rgba(65, 48, 25, 0.07);
+      --radius: 12px;
+      --max: 980px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent 32rem),
+        radial-gradient(circle at 8% 2%, rgba(216, 182, 111, 0.22), transparent 30rem),
+        radial-gradient(circle at 92% 0%, rgba(22, 143, 120, 0.10), transparent 28rem),
+        var(--paper);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    a { color: var(--jade); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      width: min(100%, var(--max));
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 56px) 20px 80px;
+    }
+
+    header.top {
+      margin-bottom: 34px;
+    }
+
+    .kicker {
+      color: var(--gold);
+      font-weight: 950;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.76rem;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      max-width: 70ch;
+    }
+
+    .note {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: var(--amber-soft);
+      color: var(--amber);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    section {
+      margin-top: 42px;
+    }
+
+    h2 {
+      color: var(--ink);
+      font-size: 1.4rem;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-size: 0.94rem;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(18px, 3vw, 26px);
+    }
+
+    ul.clean {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    ul.clean li {
+      margin-bottom: 9px;
+    }
+
+    ul.clean li:last-child { margin-bottom: 0; }
+
+    .arch-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .arch-list li {
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 12px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .arch-list li:last-child { border-bottom: none; }
+
+    .arch-list code {
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .arch-list span {
+      color: var(--muted);
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .page-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fffdf8;
+      box-shadow: var(--shadow-soft);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .page-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .page-card b {
+      color: var(--ink);
+      font-size: 1.02rem;
+    }
+
+    .page-card .file {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .badge.public {
+      background: var(--jade-soft);
+      color: var(--jade);
+      border: 1px solid rgba(22, 143, 120, 0.2);
+    }
+
+    .badge.private {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid rgba(116, 80, 23, 0.2);
+    }
+
+    .page-card a.open-link {
+      margin-top: auto;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .status-list li {
+      display: grid;
+      grid-template-columns: 26px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .status-list .mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.78rem;
+      font-weight: 950;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+
+    .status-list .mark.done {
+      background: var(--jade-soft);
+      color: var(--jade);
+    }
+
+    .status-list .mark.open {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .questions {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: q;
+    }
+
+    .questions li {
+      counter-increment: q;
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .questions li:last-child { border-bottom: none; }
+
+    .questions li::before {
+      content: counter(q);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--jade);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 0.82rem;
+      font-weight: 950;
+    }
+
+    ol.steps {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    ol.steps li {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 12px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    ol.steps li:last-child { border-bottom: none; }
+
+    ol.steps b.step-num {
+      display: inline-grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--jade), #0f6e5d);
+      color: #fff;
+      font-size: 0.82rem;
+    }
+
+    footer.bottom {
+      margin-top: 50px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 620px) {
+      .arch-list li { grid-template-columns: 1fr; gap: 3px; }
+      .page-grid { grid-template-columns: 1fr; }
+      .questions li, ol.steps li { grid-template-columns: 24px minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <p class="kicker">MindEarn · Belső fejlesztői dokumentum</p>
+      <h1>MindEarn fejlesztői áttekintő</h1>
+      <p class="lead">A MindEarn egy magyar nyelvű oktatási / tagsági platform, amely egy könyv (Bőség kézikönyv), egy online képzés, hanganyagok, egy 3-6-9 hetes gyakorlási rendszer, egy munkafüzet és egy felhasználói hozzáférés-központ köré épül. Ez az oldal egy gyors, technikai áttekintőt ad egy programozó kollégának a jelenlegi állapotról, hogy ne kelljen a teljes kódbázist végigolvasnia induláskor.</p>
+      <div class="note">Ez az oldal nem tartalmaz jelszót, API-kulcsot vagy Supabase hozzáférési adatot. Teszt bejelentkezési adatokat, ha szükséges, külön, privát csatornán osztunk meg.</div>
+    </header>
+
+    <section>
+      <h2>Jelenlegi architektúra</h2>
+      <p class="section-sub">Az oldalak szándékosan külön HTML-fájlok maradtak — ez könnyebben kezelhető és átláthatóbb, mint mindent a dashboard fülei alá zsúfolni.</p>
+      <div class="panel">
+        <ul class="arch-list">
+          <li><code>index.html</code><span>publikus bemutató oldal</span></li>
+          <li><code>dashboard.html</code><span>bejelentkezett központ / irányítópult (launchpad)</span></li>
+          <li><code>courses.html</code><span>bejelentkezett részletes képzési oldal</span></li>
+          <li><code>lesson.html</code><span>bejelentkezett leckeoldal</span></li>
+          <li><code>audio.html</code><span>bejelentkezett hanganyag oldal</span></li>
+          <li><code>practice.html</code><span>bejelentkezett 3-6-9 gyakorló oldal</span></li>
+          <li><code>workbook.html</code><span>bejelentkezett munkafüzet oldal</span></li>
+          <li><code>profile.html</code><span>bejelentkezett profil / hozzáférések / letöltések oldal</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Kattintható oldaltérkép</h2>
+      <p class="section-sub">Minden kártya megjelöli, hogy publikus, vagy bejelentkezéshez kötött (a bejelentkezéshez kötött oldalak <code>requireAuth()</code>-tal védettek — bejelentkezés nélkül <code>login.html</code>-re irányítanak át).</p>
+      <div class="page-grid">
+        <article class="page-card">
+          <span class="badge public">Publikus</span>
+          <b>Főoldal</b>
+          <span class="file">index.html</span>
+          <a class="open-link" href="index.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Dashboard / launchpad</b>
+          <span class="file">dashboard.html</span>
+          <a class="open-link" href="dashboard.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Képzés</b>
+          <span class="file">courses.html</span>
+          <a class="open-link" href="courses.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Lecke</b>
+          <span class="file">lesson.html</span>
+          <a class="open-link" href="lesson.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Hanganyagok</b>
+          <span class="file">audio.html</span>
+          <a class="open-link" href="audio.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>3-6-9 gyakorlás</b>
+          <span class="file">practice.html</span>
+          <a class="open-link" href="practice.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Munkafüzet</b>
+          <span class="file">workbook.html</span>
+          <a class="open-link" href="workbook.html">Megnyitás →</a>
+        </article>
+        <article class="page-card">
+          <span class="badge private">Bejelentkezéshez kötött</span>
+          <b>Profil / hozzáférések</b>
+          <span class="file">profile.html</span>
+          <a class="open-link" href="profile.html">Megnyitás →</a>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Már elkészült munka</h2>
+      <div class="panel">
+        <ul class="status-list">
+          <li><span class="mark done">✓</span><span>Bejelentkezés/regisztráció láthatósági fallback javítva (ha a session-ellenőrzés hibázik, a navigáció kijelentkezett állapotra esik vissza, nem marad örökre rejtve)</span></li>
+          <li><span class="mark done">✓</span><span>Mobil nézetben a bejelentkezés gomb elérhetősége javítva (~390px-től)</span></li>
+          <li><span class="mark done">✓</span><span>Windows-kompatibilis build script (a letölthető anyagok másolása Node.js scripttel, POSIX shell-parancsok helyett)</span></li>
+          <li><span class="mark done">✓</span><span>Publikus és bejelentkezett navigáció szétválasztva (<code>data-auth-visible</code> alapon, meglévő mechanizmussal)</span></li>
+          <li><span class="mark done">✓</span><span>Dashboard launchpad-irány: a bal oldali navigáció valódi linkekkel mutat a részletes oldalakra</span></li>
+          <li><span class="mark done">✓</span><span><code>requireAuth()</code> védelem bekötve a bejelentkezéshez kötött modul-oldalakon</span></li>
+          <li><span class="mark done">✓</span><span>Főoldali CTA-k letisztítva (törött linkek javítva, belső linkek csak bejelentkezve aktívak)</span></li>
+          <li><span class="mark done">✓</span><span><code>profile.html</code> megtisztítva: fejlesztői/belső tartalom (backend-tervezési jegyzetek, teszt-űrlap) eltávolítva</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Ismert nyitott pontok / átnézendő elemek</h2>
+      <div class="panel">
+        <ul class="status-list">
+          <li><span class="mark open">!</span><span><code>profile.html</code>-en még hiányzik a valódi profil/fiók-adat felület (email megjelenítés, szerkeszthető név, mentés)</span></li>
+          <li><span class="mark open">!</span><span><code>dashboard.html</code>-ben maradt régi, inaktív tab-tartalom, amit egy külön lépésben érdemes eltávolítani</span></li>
+          <li><span class="mark open">!</span><span>A különálló modul-oldalak szándékosan maradnak — ezek adják a részletes felhasználói élményt, nem tervezzük őket a dashboard fülei alá visszaolvasztani</span></li>
+          <li><span class="mark open">!</span><span>A Supabase backend-funkciók bővítése jelenleg szüneteltetve van</span></li>
+          <li><span class="mark open">!</span><span>A gyakorlás (<code>practice.html</code>) és a munkafüzet (<code>workbook.html</code>) mentése még nincs bekötve — jelenleg csak vizuális előnézet/minta állapot</span></li>
+          <li><span class="mark open">!</span><span>A hanganyag-lejátszó (<code>audio.html</code>) egyelőre nagyrészt vizuális makett, nem valódi lejátszó</span></li>
+          <li><span class="mark open">!</span><span>A főoldal és a belső oldalak vizuális csiszolása még nem végleges (prémium UI-finomítás hátravan)</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Kérdések szakmai átnézéshez</h2>
+      <p class="section-sub">Technikai fogalmak: <b>technical debt</b> = felgyűlt technikai rendetlenség vagy később javítandó kódrész. <b>Refactor</b> = kód átszervezése úgy, hogy a működés ugyanaz maradjon, de tisztább legyen.</p>
+      <div class="panel">
+        <ol class="questions">
+          <li>Logikus-e a jelenlegi oldal-architektúra (különálló HTML-fájlok modulonként, dashboard mint launchpad)?</li>
+          <li>Maradjanak-e a bejelentkezéshez kötött részletes oldalak külön HTML-fájlokként, vagy érdemesebb lenne egy keretrendszerre (pl. React/Vue) váltani hosszú távon?</li>
+          <li>Jó helyen van-e most a <code>requireAuth()</code> védelem, és elég-e önmagában, vagy kell mellé szerver oldali/RLS-alapú kiegészítés is?</li>
+          <li>Mi a legbiztonságosabb következő lépés a backend-integráció folytatásához (pl. <code>practice</code>/<code>workbook</code> mentés bekötése)?</li>
+          <li>Melyik technikai adósságot érdemes elsőként rendbe tenni?</li>
+          <li>Van-e biztonsági kockázat a jelenlegi frontend-szerkezetben (pl. a védett oldalak kliensoldali guard-ja, statikus fájlok elérhetősége)?</li>
+          <li>Mit érdemes csak azután refaktorálni, hogy a UI-irány stabilizálódott?</li>
+        </ol>
+      </div>
+    </section>
+
+    <section>
+      <h2>Javasolt következő lépések</h2>
+      <div class="panel">
+        <ol class="steps">
+          <li><b class="step-num">1</b><span>A dashboard elavult, inaktív tab-tartalmának eltávolítása</span></li>
+          <li><b class="step-num">2</b><span>A profil/fiókadat felület kialakítása (<code>profile.html</code>)</span></li>
+          <li><b class="step-num">3</b><span>A dashboard mint launchpad szerep további tisztázása és véglegesítése</span></li>
+          <li><b class="step-num">4</b><span>A modul-oldalak vizuális csiszolása (prémium finomhangolás)</span></li>
+          <li><b class="step-num">5</b><span>Később: a gyakorlás/munkafüzet valódi Supabase-mentésének bekötése</span></li>
+          <li><b class="step-num">6</b><span>Később: analitika/feliratkozók Supabase-bekötése, ha szükséges</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <footer class="bottom">
+      MindEarn — belső fejlesztői áttekintő oldal. Ez az oldal szándékosan nincs linkelve a publikus navigációból; csak közvetlen URL-lel érhető el.
+    </footer>
+  </div>
+</body>
+</html>
